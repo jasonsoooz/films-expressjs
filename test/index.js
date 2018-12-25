@@ -4,8 +4,27 @@ let request = require('supertest');
 let app = require('../server');
 let {expect} = require('chai');
 
+// For manual testing:
+// curl -d '{"year":2004,"title":"Spiderman 2","imdbRating":7.3,"director":"Sam Raimi"}' -H "Content-Type: application/json" -X POST http://localhost:8020/films
+describe('POST /films', function () {
+  let film = {year:"2002", title: "Spiderman", imdbRating: "7.3", director:"Sam Raimi"};
+  it('respond with 201 created', (done) => {
+    request(app)
+      .post('/films')
+      .send(film)
+      .set('Accept', 'application/json')
+      .expect('Content-Type', /json/)
+      .expect(201)
+      .then(res => {
+        expect(res.body).to.equal('film added');
+        done();
+      });
+  });
+});
+
+// Need to be after POST as it's asserting GET film added from post
 describe('GET /films', () => {
-  it('responds with json', () => {
+  it('responds with json films', () => {
     return request(app)
       .get('/films')
       .expect('Content-Type', /json/)
