@@ -2,6 +2,9 @@
 
 let express = require('express')
 let app = express()
+
+let isEqual = require('lodash.isequal')
+
 let films = [];
 
 app.get('/films', (req, res) => {
@@ -20,6 +23,16 @@ app.post('/films', (req, res) => {
     return res.status(201).json('film added');
   }
   return res.status(400).json('bad film data, film not added');
+});
+
+app.delete('/films/:title', (req, res) => {
+  let film = req.body;
+  if (film) {
+    films = films.filter(elem => ! isEqual(film, elem));
+    // 204 (No content), not supposed to send anything in response body
+    return res.status(204).json();
+  }
+  return res.status(400).json('bad film data, film not deleted');
 });
 
 module.exports = app;
