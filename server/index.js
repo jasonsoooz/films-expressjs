@@ -1,11 +1,14 @@
 "use strict";
 
-let express = require('express')
-let app = express()
+let express = require('express');
+let app = express();
+module.exports = app;
 
-let isEqual = require('lodash.isequal')
+let isEqual = require('lodash.isequal');
 
 let films = [];
+
+app.use(express.static('public'));
 
 app.get('/films', (req, res) => {
   res.json(films)
@@ -34,5 +37,3 @@ app.delete('/films/:title', (req, res) => {
   }
   return res.status(400).json('bad film data, film not deleted');
 });
-
-module.exports = app;
