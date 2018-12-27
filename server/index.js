@@ -12,7 +12,7 @@ app.use(express.static('public'));
 
 app.get('/films', (req, res) => {
   res.json(films)
-})
+});
 
 // To parse request body correctly, need this line of code.
 // Uses body-parser (already included in express).
