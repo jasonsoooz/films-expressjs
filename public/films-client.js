@@ -10,13 +10,13 @@ const elt = (type, props, ...children) => {
   return dom;
 }
 
-const createFilmTable = (table, films) => {
+const displayFilmTable = (filmCols, films) => {
+  let table = elt("table", {style: "width: 100%"});
+
   // Build table header
-  let filmHeaderCols = ["Year", "Title", "Imdb Rating", "Director"];
   let header = elt("thead", null);
-  filmHeaderCols.forEach(elem => {
-    let headerCol = elt("th", null, elem);
-    header.appendChild(headerCol);
+  filmCols.forEach(elem => {
+    header.appendChild(elt("th", null, elem));
   });
   table.appendChild(header);
 
@@ -34,10 +34,6 @@ const createFilmTable = (table, films) => {
   });
 
   document.body.appendChild(table);
-
-  let tableId = "filmsTable";
-  table.setAttribute("id", tableId);
-  document.getElementById(tableId).style.width = "100%";
 }
 
 const runApp = () => {
@@ -45,8 +41,8 @@ const runApp = () => {
     {"year":2002,"title":"Spiderman","imdbRating":7.3,"director":"Sam Raimi"},
     {"year":2004,"title":"Spiderman 2","imdbRating":7.3,"director":"Sam Raimi"}
   ];
-  let table = elt("table", null);
-  createFilmTable(table, films);
+  let filmCols = ["Year", "Title", "Imdb Rating", "Director"];
+  displayFilmTable(filmCols, films);
 }
 
 // Main body
