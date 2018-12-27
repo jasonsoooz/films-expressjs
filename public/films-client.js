@@ -10,6 +10,7 @@ const elt = (type, props, ...children) => {
   return dom;
 }
 
+
 const displayFilmTable = (filmCols, films) => {
   let table = elt("table", {style: "width: 100%"});
 
@@ -36,20 +37,32 @@ const displayFilmTable = (filmCols, films) => {
   document.body.appendChild(table);
 }
 
-function submitClick(event) {
-  // console.log("films: ");
-  // console.log(films);
 
+const submitClick = (event) => {
   let year = event.target.elements["Year"].value;
   let title = event.target.elements["Title"].value;
   let imdbRating = event.target.elements["Imdb Rating"].value;
   let director = event.target.elements["Director"].value;
 
   console.log("year: %s, title: %s, imdbRating: %s, director: %s", year, title, imdbRating, director);
-  // films.push({year: year, title: title, imdbRating: imdbRating, director: director});
-  // console.log(films);
-  alert("Submit clicked");
+
+  (async () => {
+    const rawResponse = await fetch('/films', {
+      method: 'POST',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({year:year,title:title,imdbRating:imdbRating,director:director})
+    }).catch(error => console.log(error));
+    const content = await rawResponse.json();
+    console.log("Post content");
+    console.log(content);
+  })();
+  alert("Film submitted");
+  // setTimeout(console.log("hi"), 1000);
 }
+
 
 const displayForm = (filmCols) => {
   document.body.appendChild(elt("h2", null, "Submit a film"));
@@ -69,16 +82,21 @@ const displayForm = (filmCols) => {
   document.body.appendChild(form);
 }
 
-const runApp = () => {
-  let films = [
-    {"year":2002,"title":"Spiderman","imdbRating":7.3,"director":"Sam Raimi"},
-    {"year":2004,"title":"Spiderman 2","imdbRating":7.3,"director":"Sam Raimi"}
-  ];
+
+const fetchGet = (url) => {
+  return fetch(url)
+          .then(response => {return response.json()});
+}
+
+
+const runApp = async () => {
+  let films = await fetchGet("/films");
   let filmCols = ["Year", "Title", "Imdb Rating", "Director"];
 
   displayFilmTable(filmCols, films);
   displayForm(filmCols);
 }
+
 
 // Main body
 runApp();
