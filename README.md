@@ -31,6 +31,5 @@ npm test
 ```
 
 ### To do:
-* Add delete functionality
-* Add form validation
+* Add server mandatory field validation
 * Add update functionality

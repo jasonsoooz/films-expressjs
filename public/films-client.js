@@ -90,6 +90,12 @@ const handleSubmit = (event) => {
   const director = event.target.elements["Director"].value;
   console.log("year: %s, title: %s, imdbRating: %s, director: %s", year, title, imdbRating, director);
 
+  // Validate mandatory fields
+  if (!title) {
+    alert("Title cannot be blank");
+    return false;
+  }
+
   fetch('/films', {
     method: 'POST',
     headers: {
@@ -113,7 +119,9 @@ const displayForm = (formCols) => {
 
   const form = elt("form", {onsubmit: handleSubmit});
   formCols.forEach(elem => {
-    form.appendChild(elt("label", null, elem + ":"));
+    if (elem == "Title") form.appendChild(elt("label", null, elem + " *"));
+    else form.appendChild(elt("label", null, elem));
+
     form.appendChild(elt("br", null));
     const inputText = elt("input", {type: "text", name: elem});
     form.appendChild(inputText);
