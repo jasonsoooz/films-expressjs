@@ -1,7 +1,7 @@
 "use strict";
 
 const elt = (type, props, ...children) => {
-  let dom = document.createElement(type);
+  const dom = document.createElement(type);
   if (props) Object.assign(dom, props);
   for (let child of children) {
     if (typeof child != "string") dom.appendChild(child);
@@ -17,10 +17,10 @@ function handleDelete(year, title, imdbRating, director) {
 
 
 const displayFilmTable = (displayCols, films) => {
-  let table = elt("table", {style: "width: 100%"});
+  const table = elt("table", {style: "width: 100%"});
 
   // Build table header
-  let header = elt("thead", null);
+  const header = elt("thead", null);
   displayCols.forEach(elem => {
     header.appendChild(elt("th", null, elem));
   });
@@ -29,18 +29,18 @@ const displayFilmTable = (displayCols, films) => {
   let filmNumber = 1;
   // Build table body
   films.forEach(elem => {
-    let row = table.insertRow();
-    let cell = row.insertCell(0);
+    const row = table.insertRow();
+    const cell = row.insertCell(0);
     cell.innerHTML = filmNumber.toString();
-    let cell1 = row.insertCell(1);
+    const cell1 = row.insertCell(1);
     cell1.innerHTML = elem.year;
-    let cell2 = row.insertCell(2);
+    const cell2 = row.insertCell(2);
     cell2.innerHTML = elem.title;
-    let cell3 = row.insertCell(3);
+    const cell3 = row.insertCell(3);
     cell3.innerHTML = elem.imdbRating;
-    let cell4 = row.insertCell(4);
+    const cell4 = row.insertCell(4);
     cell4.innerHTML = elem.director;
-    let cell5 = row.insertCell(5);
+    const cell5 = row.insertCell(5);
     cell5.innerHTML = `<button type="button" onclick="handleDelete('${elem.year}', '${elem.title}', '${elem.imdbRating}', '${elem.director}')">Delete</button>`;
     filmNumber++;
   });
@@ -51,8 +51,8 @@ const displayFilmTable = (displayCols, films) => {
 
 // synchronous / blocking sleep
 function sleep(milliseconds) {
-  var start = new Date().getTime();
-  for (var i = 0; i < 1e7; i++) {
+  const start = new Date().getTime();
+  for (let i = 0; i < 1e7; i++) {
     if ((new Date().getTime() - start) > milliseconds){
       break;
     }
@@ -61,10 +61,10 @@ function sleep(milliseconds) {
 
 
 const handleSubmit = (event) => {
-  let year = event.target.elements["Year"].value;
-  let title = event.target.elements["Title"].value;
-  let imdbRating = event.target.elements["Imdb Rating"].value;
-  let director = event.target.elements["Director"].value;
+  const year = event.target.elements["Year"].value;
+  const title = event.target.elements["Title"].value;
+  const imdbRating = event.target.elements["Imdb Rating"].value;
+  const director = event.target.elements["Director"].value;
   console.log("year: %s, title: %s, imdbRating: %s, director: %s", year, title, imdbRating, director);
 
   fetch('/films', {
@@ -88,16 +88,16 @@ const handleSubmit = (event) => {
 const displayForm = (formCols) => {
   document.body.appendChild(elt("h2", null, "Submit a film"));
 
-  let form = elt("form", {onsubmit: handleSubmit});
+  const form = elt("form", {onsubmit: handleSubmit});
   formCols.forEach(elem => {
     form.appendChild(elt("label", null, elem + ":"));
     form.appendChild(elt("br", null));
-    let inputText = elt("input", {type: "text", name: elem});
+    const inputText = elt("input", {type: "text", name: elem});
     form.appendChild(inputText);
     form.appendChild(elt("br", null));
   });
 
-  let submitButton = elt("button", {type: "submit"}, "Submit");
+  const submitButton = elt("button", {type: "submit"}, "Submit");
   form.appendChild(submitButton);
 
   document.body.appendChild(form);
@@ -111,9 +111,9 @@ const fetchGet = (url) => {
 
 
 const runApp = async () => {
-  let films = await fetchGet("/films");
-  let displayCols = ["No", "Year", "Title", "Imdb Rating", "Director", "Actions"];
-  let formCols = ["Year", "Title", "Imdb Rating", "Director"];
+  const films = await fetchGet("/films");
+  const displayCols = ["No", "Year", "Title", "Imdb Rating", "Director", "Actions"];
+  const formCols = ["Year", "Title", "Imdb Rating", "Director"];
 
   displayFilmTable(displayCols, films);
   displayForm(formCols);
