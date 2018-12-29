@@ -38,36 +38,10 @@ const displayFilmTable = (filmCols, films) => {
 }
 
 
-const submitClick = (event) => {
-  let year = event.target.elements["Year"].value;
-  let title = event.target.elements["Title"].value;
-  let imdbRating = event.target.elements["Imdb Rating"].value;
-  let director = event.target.elements["Director"].value;
-
-  console.log("year: %s, title: %s, imdbRating: %s, director: %s", year, title, imdbRating, director);
-
-  (async () => {
-    const rawResponse = await fetch('/films', {
-      method: 'POST',
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({year:year,title:title,imdbRating:imdbRating,director:director})
-    }).catch(error => console.log(error));
-    const content = await rawResponse.json();
-    console.log("Post content");
-    console.log(content);
-  })();
-  alert("Film submitted");
-  // setTimeout(console.log("hi"), 1000);
-}
-
-
 const displayForm = (filmCols) => {
   document.body.appendChild(elt("h2", null, "Submit a film"));
 
-  let form = elt("form", {onsubmit: submitClick});
+  let form = elt("form", {action: "/films", method:"post"});
   filmCols.forEach(elem => {
     form.appendChild(elt("label", null, elem + ":"));
     form.appendChild(elt("br", null));
@@ -91,7 +65,7 @@ const fetchGet = (url) => {
 
 const runApp = async () => {
   let films = await fetchGet("/films");
-  let filmCols = ["Year", "Title", "Imdb Rating", "Director"];
+  let filmCols = ["year", "title", "imdbRating", "director"];
 
   displayFilmTable(filmCols, films);
   displayForm(filmCols);
