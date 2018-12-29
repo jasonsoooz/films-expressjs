@@ -99,6 +99,8 @@ const displayForm = (formCols) => {
 
   const submitButton = elt("button", {type: "submit"}, "Submit");
   form.appendChild(submitButton);
+  const resetButton = elt("button", {type: "reset"}, "Reset");
+  form.appendChild(resetButton);
 
   document.body.appendChild(form);
 }
