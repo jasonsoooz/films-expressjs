@@ -26,7 +26,7 @@ app.use(express.json());
 
 app.post('/films', (req, res) => {
   let film = req.body;
-  console.log("film:");
+  console.log("film to add:");
   console.log(film);
   if (film) {
     films.push(film);
@@ -42,6 +42,8 @@ let isEqual = require('lodash.isequal');
 
 app.delete('/films/:title', (req, res) => {
   let film = req.body;
+  console.log("film to delete:");
+  console.log(film);
   if (film) {
     films = films.filter(elem => ! isEqual(film, elem));
     // 204 (No content), not supposed to send anything in response body

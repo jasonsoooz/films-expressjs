@@ -13,6 +13,26 @@ const elt = (type, props, ...children) => {
 
 function handleDelete(year, title, imdbRating, director) {
   console.log("year: %s, title: %s, imdbRating: %s, director: %s", year, title, imdbRating, director);
+
+  fetch('/films/' + title, {
+    method: 'DELETE',
+    headers: {
+      'Accept': 'application/json',
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({year: year, title: title, imdbRating: imdbRating, director: director})
+  })
+    .catch(error => console.log(error));
+
+  // Weird that firefox needs a blocking delay for post to work.
+  // It logs an error that can be ignored:
+  //   "TypeError: NetworkError when attempting to fetch resource"
+  // Chrome works cleanly without sleep
+  sleep(100);
+
+  // Redirect back to home page to refresh results
+  // Required, as its not part of form submit which causes a page reload
+  window.location.replace("/");
 }
 
 
