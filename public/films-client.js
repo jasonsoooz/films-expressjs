@@ -17,6 +17,9 @@ function handleDelete(year, title, imdbRating, director) {
 
 
 const displayFilmTable = (displayCols, films) => {
+  const filmsCounter = elt("p", null, `Number of films: ${films.length}`);
+  document.body.appendChild(filmsCounter);
+
   const table = elt("table", {style: "width: 100%"});
 
   // Build table header
