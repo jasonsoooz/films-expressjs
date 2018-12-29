@@ -11,27 +11,38 @@ const elt = (type, props, ...children) => {
 }
 
 
-const displayFilmTable = (filmCols, films) => {
+function handleDelete(year, title, imdbRating, director) {
+  console.log("year: %s, title: %s, imdbRating: %s, director: %s", year, title, imdbRating, director);
+}
+
+
+const displayFilmTable = (displayCols, films) => {
   let table = elt("table", {style: "width: 100%"});
 
   // Build table header
   let header = elt("thead", null);
-  filmCols.forEach(elem => {
+  displayCols.forEach(elem => {
     header.appendChild(elt("th", null, elem));
   });
   table.appendChild(header);
 
+  let filmNumber = 1;
   // Build table body
   films.forEach(elem => {
     let row = table.insertRow();
     let cell = row.insertCell(0);
-    cell.innerHTML = elem.year;
+    cell.innerHTML = filmNumber.toString();
     let cell1 = row.insertCell(1);
-    cell1.innerHTML = elem.title;
+    cell1.innerHTML = elem.year;
     let cell2 = row.insertCell(2);
-    cell2.innerHTML = elem.imdbRating;
+    cell2.innerHTML = elem.title;
     let cell3 = row.insertCell(3);
-    cell3.innerHTML = elem.director;
+    cell3.innerHTML = elem.imdbRating;
+    let cell4 = row.insertCell(4);
+    cell4.innerHTML = elem.director;
+    let cell5 = row.insertCell(5);
+    cell5.innerHTML = `<button type="button" onclick="handleDelete('${elem.year}', '${elem.title}', '${elem.imdbRating}', '${elem.director}')">Delete</button>`;
+    filmNumber++;
   });
 
   document.body.appendChild(table);
@@ -74,11 +85,11 @@ const handleSubmit = (event) => {
 }
 
 
-const displayForm = (filmCols) => {
+const displayForm = (formCols) => {
   document.body.appendChild(elt("h2", null, "Submit a film"));
 
   let form = elt("form", {onsubmit: handleSubmit});
-  filmCols.forEach(elem => {
+  formCols.forEach(elem => {
     form.appendChild(elt("label", null, elem + ":"));
     form.appendChild(elt("br", null));
     let inputText = elt("input", {type: "text", name: elem});
@@ -90,7 +101,6 @@ const displayForm = (filmCols) => {
   form.appendChild(submitButton);
 
   document.body.appendChild(form);
-  // form.addEventListener("submit", () => {return handleSubmit();});
 }
 
 
@@ -102,10 +112,11 @@ const fetchGet = (url) => {
 
 const runApp = async () => {
   let films = await fetchGet("/films");
-  let filmCols = ["Year", "Title", "Imdb Rating", "Director"];
+  let displayCols = ["No", "Year", "Title", "Imdb Rating", "Director", "Actions"];
+  let formCols = ["Year", "Title", "Imdb Rating", "Director"];
 
-  displayFilmTable(filmCols, films);
-  displayForm(filmCols);
+  displayFilmTable(displayCols, films);
+  displayForm(formCols);
 }
 
 
