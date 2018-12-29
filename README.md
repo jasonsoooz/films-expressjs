@@ -31,5 +31,6 @@ npm test
 ```
 
 ### To do:
-* Fix submit post
+* Add delete functionality
 * Add form validation
+* Add update functionality

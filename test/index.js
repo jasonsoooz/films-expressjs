@@ -14,9 +14,9 @@ describe('POST /films', function () {
       .post('/films')
       .send(film)
       .set('Accept', 'application/json')
-      .expect(302)
-      .end((err) => {
-        if (err) return done(err);
+      .expect(201)
+      .then(res => {
+        expect(res.body).to.equal('film added');
         done();
       });
   });

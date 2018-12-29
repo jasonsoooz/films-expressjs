@@ -23,13 +23,14 @@ app.get('/films', (req, res) => {
 // Uses body-parser (already included in express).
 // Without this, request body will not have full content as its async
 app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
 
 app.post('/films', (req, res) => {
   let film = req.body;
+  console.log("film:");
+  console.log(film);
   if (film) {
     films.push(film);
-    return res.redirect("/");
+    return res.status(201).json('film added');
   }
   return res.status(400).json('bad film data, film not added');
 });

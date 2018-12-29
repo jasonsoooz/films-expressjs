@@ -38,10 +38,46 @@ const displayFilmTable = (filmCols, films) => {
 }
 
 
+// synchronous / blocking sleep
+function sleep(milliseconds) {
+  var start = new Date().getTime();
+  for (var i = 0; i < 1e7; i++) {
+    if ((new Date().getTime() - start) > milliseconds){
+      break;
+    }
+  }
+}
+
+
+const handleSubmit = (event) => {
+  let year = event.target.elements["Year"].value;
+  let title = event.target.elements["Title"].value;
+  let imdbRating = event.target.elements["Imdb Rating"].value;
+  let director = event.target.elements["Director"].value;
+  console.log("year: %s, title: %s, imdbRating: %s, director: %s", year, title, imdbRating, director);
+
+  fetch('/films', {
+    method: 'POST',
+    headers: {
+      'Accept': 'application/json',
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({year: year, title: title, imdbRating: imdbRating, director: director})
+  })
+    .catch(error => console.log(error));
+
+  // Weird that firefox needs a blocking delay for post to work.
+  // It logs an error that can be ignored:
+  //   "TypeError: NetworkError when attempting to fetch resource"
+  // Chrome works cleanly without sleep
+  sleep(100);
+}
+
+
 const displayForm = (filmCols) => {
   document.body.appendChild(elt("h2", null, "Submit a film"));
 
-  let form = elt("form", {action: "/films", method:"post"});
+  let form = elt("form", {onsubmit: handleSubmit});
   filmCols.forEach(elem => {
     form.appendChild(elt("label", null, elem + ":"));
     form.appendChild(elt("br", null));
@@ -54,6 +90,7 @@ const displayForm = (filmCols) => {
   form.appendChild(submitButton);
 
   document.body.appendChild(form);
+  // form.addEventListener("submit", () => {return handleSubmit();});
 }
 
 
@@ -65,7 +102,7 @@ const fetchGet = (url) => {
 
 const runApp = async () => {
   let films = await fetchGet("/films");
-  let filmCols = ["year", "title", "imdbRating", "director"];
+  let filmCols = ["Year", "Title", "Imdb Rating", "Director"];
 
   displayFilmTable(filmCols, films);
   displayForm(filmCols);
