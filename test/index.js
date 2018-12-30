@@ -8,15 +8,26 @@ let {expect} = require('chai');
 // curl -d '{"year":2002,"title":"Spiderman","imdbRating":7.3,"director":"Sam Raimi"}' -H "Content-Type: application/json" -X POST http://localhost:8020/films
 // curl -d 'year=2002&title=Spiderman&imdbRating=7.3&director=Sam%20Raimi' -H "Content-Type: application/x-www-form-urlencoded" -X POST http://localhost:8020/films
 describe('POST /films', function () {
-  let film = {year:"2002", title: "Spiderman", imdbRating: "7.3", director:"Sam Raimi"};
   it('respond with 201 created', (done) => {
     request(app)
       .post('/films')
-      .send(film)
+      .send({year:"2002", title: "Spiderman", imdbRating: "7.3", director:"Sam Raimi"})
       .set('Accept', 'application/json')
       .expect(201)
       .then(res => {
         expect(res.body).to.equal('film added');
+        done();
+      });
+  });
+
+  it('respond with 400 when mandatory film title is missing', (done) => {
+    request(app)
+      .post('/films')
+      .send({})
+      .set('Accept', 'application/json')
+      .expect(400)
+      .then(res => {
+        expect(res.body).to.equal('Mandatory title is missing, film not added');
         done();
       });
   });
@@ -48,6 +59,18 @@ describe('DELETE /films/title', function () {
       .send(film)
       .set('Accept', 'application/json')
       .expect(204)
+      .end((err) => {
+        if (err) return done(err);
+        done();
+      });
+  });
+
+  it('respond with 404 not found when title not passed into delete', (done) => {
+    request(app)
+      .delete('/films')
+      .send(film)
+      .set('Accept', 'application/json')
+      .expect(404)
       .end((err) => {
         if (err) return done(err);
         done();
