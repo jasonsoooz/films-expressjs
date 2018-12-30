@@ -53,10 +53,14 @@ app.delete('/films/:title', (req, res) => {
   let film = req.body;
   console.log("film to delete:");
   console.log(film);
+
   if (film) {
     films = films.filter(elem => ! isEqual(film, elem));
     // 204 (No content), not supposed to send anything in response body
     return res.status(204).json();
   }
-  return res.status(400).json('bad film data, film not deleted');
+
+  const error = "Bad film data, film not deleted";
+  console.log(error);
+  return res.status(400).json(error);
 });

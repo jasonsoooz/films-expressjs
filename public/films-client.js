@@ -11,10 +11,10 @@ const elt = (type, props, ...children) => {
 }
 
 
-function handleDelete(year, title, imdbRating, director) {
+async function handleDelete(year, title, imdbRating, director) {
   console.log("year: %s, title: %s, imdbRating: %s, director: %s", year, title, imdbRating, director);
 
-  fetch('/films/' + title, {
+  const response = await fetch('/films/' + title, {
     method: 'DELETE',
     headers: {
       'Accept': 'application/json',
@@ -24,11 +24,11 @@ function handleDelete(year, title, imdbRating, director) {
   })
     .catch(error => console.log(error));
 
-  // Weird that firefox needs a blocking delay for post to work.
-  // It logs an error that can be ignored:
-  //   "TypeError: NetworkError when attempting to fetch resource"
-  // Chrome works cleanly without sleep
-  sleep(100);
+  if (response.status >= 400) {
+    const json = await response.json();
+    setStatusMessage(json);
+    return false;
+  }
 
   // Redirect back to home page to refresh results
   // Required, as its not part of form submit which causes a page reload
@@ -72,17 +72,6 @@ const displayFilmTable = (displayCols, films) => {
   });
 
   document.body.appendChild(table);
-}
-
-
-// synchronous / blocking sleep
-function sleep(milliseconds) {
-  const start = new Date().getTime();
-  for (let i = 0; i < 1e7; i++) {
-    if ((new Date().getTime() - start) > milliseconds){
-      break;
-    }
-  }
 }
 
 
