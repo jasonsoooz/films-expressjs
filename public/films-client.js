@@ -37,6 +37,9 @@ function handleDelete(year, title, imdbRating, director) {
 
 
 const displayFilmTable = (displayCols, films) => {
+  const status = elt("p", {id: "status"}, "");
+  document.body.appendChild(status);
+
   const filmsCounter = elt("p", null, `Number of films: ${films.length}`);
   document.body.appendChild(filmsCounter);
 
@@ -83,7 +86,22 @@ function sleep(milliseconds) {
 }
 
 
-const handleSubmit = (event) => {
+const setStatusMessage = (message, color = "red") => {
+  const status = document.getElementById("status");
+  status.style.color = color;
+  status.innerHTML = message;
+}
+
+
+const handleSubmit = async (event) => {
+  // Prevent auto page reload after submit button pressed
+  // As we may need to stay on page & display error message if errors occur
+  // Preventing auto page reload avoids the weird firefox only issue when using post fetch
+  // Chrome didn't have this issue.  Issue:
+  //  "TypeError: NetworkError when attempting to fetch resource"
+  // Previous workaround was to sleep / block for 100ms
+  event.preventDefault();
+
   const year = event.target.elements["Year"].value;
   const title = event.target.elements["Title"].value;
   const imdbRating = event.target.elements["Imdb Rating"].value;
@@ -92,11 +110,11 @@ const handleSubmit = (event) => {
 
   // Validate mandatory fields
   if (!title) {
-    alert("Title cannot be blank");
+    setStatusMessage("Title cannot be blank");
     return false;
   }
 
-  fetch('/films', {
+  const response = await fetch('/films', {
     method: 'POST',
     headers: {
       'Accept': 'application/json',
@@ -105,12 +123,15 @@ const handleSubmit = (event) => {
     body: JSON.stringify({year: year, title: title, imdbRating: imdbRating, director: director})
   })
     .catch(error => console.log(error));
+  const json = await response.json();
 
-  // Weird that firefox needs a blocking delay for post to work.
-  // It logs an error that can be ignored:
-  //   "TypeError: NetworkError when attempting to fetch resource"
-  // Chrome works cleanly without sleep
-  sleep(100);
+  if (response.status >= 400) {
+    setStatusMessage(json);
+    return false;
+  }
+
+  // Redirect to home page
+  window.location.replace("/");
 }
 
 

@@ -28,11 +28,20 @@ app.post('/films', (req, res) => {
   let film = req.body;
   console.log("film to add:");
   console.log(film);
-  if (film) {
-    films.push(film);
-    return res.status(201).json('film added');
+
+  if (!film) {
+    const error = "Bad film data, film not added";
+    console.log(error);
+    return res.status(400).json(error);
   }
-  return res.status(400).json('bad film data, film not added');
+  if (!film.title) {
+    const error = "Mandatory title is missing, film not added";
+    console.log(error);
+    return res.status(400).json(error);
+  }
+
+  films.push(film);
+  return res.status(201).json('film added');
 });
 
 // ------------------------------------------------------------
