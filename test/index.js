@@ -1,8 +1,8 @@
 'use strict';
 
-let request = require('supertest');
-let app = require('../server');
-let {expect} = require('chai');
+const request = require('supertest');
+const app = require('../server');
+const {expect} = require('chai');
 
 // For manual testing:
 // curl -d '{"year":2002,"title":"Spiderman","imdbRating":7.3,"director":"Sam Raimi"}' -H "Content-Type: application/json" -X POST http://localhost:8020/films
@@ -52,7 +52,7 @@ describe('GET /films', () => {
 // For manual testing:
 // curl -d '{"year":2002,"title":"Spiderman","imdbRating":7.3,"director":"Sam Raimi"}' -H "Content-Type: application/json" -X DELETE http://localhost:8020/films/Spiderman
 describe('DELETE /films/title', function () {
-  let film = {year:"2002", title: "Spiderman", imdbRating: "7.3", director:"Sam Raimi"};
+  const film = {year:"2002", title: "Spiderman", imdbRating: "7.3", director:"Sam Raimi"};
   it('respond with 204 deleted', (done) => {
     request(app)
       .delete('/films/Spiderman')

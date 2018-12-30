@@ -31,5 +31,4 @@ npm test
 ```
 
 ### To do:
-* Add server mandatory field validation
 * Add update functionality

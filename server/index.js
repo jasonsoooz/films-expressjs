@@ -1,7 +1,7 @@
 "use strict";
 
-let express = require('express');
-let app = express();
+const express = require('express');
+const app = express();
 module.exports = app;
 
 let films = [];
@@ -25,7 +25,7 @@ app.get('/films', (req, res) => {
 app.use(express.json());
 
 app.post('/films', (req, res) => {
-  let film = req.body;
+  const film = req.body;
   console.log("film to add:");
   console.log(film);
 
@@ -47,10 +47,10 @@ app.post('/films', (req, res) => {
 // ------------------------------------------------------------
 // Configure delete handler
 
-let isEqual = require('lodash.isequal');
+const isEqual = require('lodash.isequal');
 
 app.delete('/films/:title', (req, res) => {
-  let film = req.body;
+  const film = req.body;
   console.log("film to delete:");
   console.log(film);
 
